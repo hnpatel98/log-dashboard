@@ -1,0 +1,21 @@
+2024-01-15 10:30:15 INFO Application started successfully
+2024-01-15 10:30:16 DEBUG Database connection established
+2024-01-15 10:30:17 INFO User authentication successful
+2024-01-15 10:30:18 WARN High memory usage detected: 85%
+2024-01-15 10:30:19 ERROR Database query failed: connection timeout
+2024-01-15 10:30:20 INFO Retrying database connection
+2024-01-15 10:30:21 DEBUG Connection pool size: 10
+2024-01-15 10:30:22 ERROR Failed to load user preferences
+2024-01-15 10:30:23 INFO Cache cleared successfully
+2024-01-15 10:30:24 WARN Slow query detected: 2.5s
+2024-01-15 10:30:25 INFO API request processed: /api/users
+2024-01-15 10:30:26 DEBUG Request headers: Content-Type=application/json
+2024-01-15 10:30:27 ERROR Internal server error: 500
+2024-01-15 10:30:28 INFO Error logged to monitoring system
+2024-01-15 10:30:29 DEBUG Stack trace captured
+2024-01-15 10:30:30 WARN Disk space low: 15% remaining
+2024-01-15 10:30:31 INFO Backup completed successfully
+2024-01-15 10:30:32 DEBUG Backup size: 2.3GB
+2024-01-15 10:30:33 ERROR Email service unavailable
+2024-01-15 10:30:34 INFO Fallback email service activated
+2024-01-15 10:30:35 DEBUG Email queue size: 15 

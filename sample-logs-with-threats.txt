@@ -1,0 +1,46 @@
+2024-01-15 10:30:15 INFO Application started successfully
+2024-01-15 10:30:16 DEBUG Database connection established
+2024-01-15 10:30:17 INFO User authentication successful
+2024-01-15 10:30:18 WARN High memory usage detected: 85%
+2024-01-15 10:30:19 ERROR Database query failed: connection timeout
+2024-01-15 10:30:20 INFO Retrying database connection
+2024-01-15 10:30:21 DEBUG Connection pool size: 10
+2024-01-15 10:30:22 ERROR Failed to load user preferences
+2024-01-15 10:30:23 INFO Cache cleared successfully
+2024-01-15 10:30:24 WARN Slow query detected: 2.5s
+2024-01-15 10:30:25 INFO API request processed: /api/users
+2024-01-15 10:30:26 DEBUG Request headers: Content-Type=application/json
+2024-01-15 10:30:27 ERROR Internal server error: 500
+2024-01-15 10:30:28 INFO Error logged to monitoring system
+2024-01-15 10:30:29 DEBUG Stack trace captured
+2024-01-15 10:30:30 WARN Disk space low: 15% remaining
+2024-01-15 10:30:31 INFO Backup completed successfully
+2024-01-15 10:30:32 DEBUG Backup size: 2.3GB
+2024-01-15 10:30:33 ERROR Email service unavailable
+2024-01-15 10:30:34 INFO Fallback email service activated
+2024-01-15 10:30:35 DEBUG Email queue size: 15
+2024-01-15 10:30:36 ERROR SQL injection attempt detected: union select * from users
+2024-01-15 10:30:37 WARN Multiple failed login attempts from IP 192.168.1.100
+2024-01-15 10:30:38 ERROR XSS attack detected: <script>alert('xss')</script>
+2024-01-15 10:30:39 INFO Path traversal attempt: ../../../etc/passwd
+2024-01-15 10:30:40 ERROR Authentication failed for user admin
+2024-01-15 10:30:41 ERROR Authentication failed for user admin
+2024-01-15 10:30:42 ERROR Authentication failed for user admin
+2024-01-15 10:30:43 ERROR Authentication failed for user admin
+2024-01-15 10:30:44 ERROR Authentication failed for user admin
+2024-01-15 10:30:45 WARN Account temporarily locked due to multiple failed attempts
+2024-01-15 10:30:46 INFO Large data transfer detected: 500MB export
+2024-01-15 10:30:47 ERROR Unauthorized access attempt to /admin/panel
+2024-01-15 10:30:48 WARN Suspicious file upload: executable.exe
+2024-01-15 10:30:49 ERROR Rate limit exceeded for API endpoint
+2024-01-15 10:30:50 INFO DDoS attack detected from multiple IPs
+2024-01-15 10:30:51 ERROR Port scan detected from 10.0.0.50
+2024-01-15 10:30:52 WARN Sensitive data access: credit card information
+2024-01-15 10:30:53 ERROR Root access attempt detected
+2024-01-15 10:30:54 INFO Malware signature detected in uploaded file
+2024-01-15 10:30:55 ERROR Backdoor attempt detected
+2024-01-15 10:30:56 WARN Unusual network activity: 1000 requests/minute
+2024-01-15 10:30:57 ERROR Privilege escalation attempt
+2024-01-15 10:30:58 INFO Data exfiltration attempt: bulk download started
+2024-01-15 10:30:59 ERROR API key invalid: unauthorized access
+2024-01-15 10:31:00 WARN Endpoint not found: /api/hack 

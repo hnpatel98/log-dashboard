@@ -134,6 +134,8 @@ backend/data/*
 !backend/requirements.txt
 !README.md
 !SECURITY.md
+!sample-logs.txt
+!sample-logs-with-threats.txt
 
 # Virtual environments
 venv/
