@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import ClientWrapper from '@/components/ClientWrapper';
+import ClientWrapper from '../../components/ClientWrapper';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');

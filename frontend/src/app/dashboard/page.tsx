@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import FileUpload from '@/components/FileUpload';
-import LogChart from '@/components/LogChart';
-import ThreatDashboard from '@/components/ThreatDashboard';
-import AISummary from '@/components/AISummary';
-import ClientWrapper from '@/components/ClientWrapper';
+import FileUpload from '../../components/FileUpload';
+import LogChart from '../../components/LogChart';
+import ThreatDashboard from '../../components/ThreatDashboard';
+import AISummary from '../../components/AISummary';
+import ClientWrapper from '../../components/ClientWrapper';
 
 interface FileData {
   file_id: string;
