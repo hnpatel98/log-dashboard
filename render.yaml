@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: log-dashboard
+    env: docker
+    plan: free
+    buildCommand: docker build -t log-dashboard .
+    startCommand: docker run -p $PORT:3000 log-dashboard
+    envVars:
+      - key: FLASK_APP
+        value: backend/app.py
+      - key: FLASK_ENV
+        value: production
+      - key: PYTHONUNBUFFERED
+        value: 1
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        value: https://log-dashboard.onrender.com
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        value: tenexai
+      - key: JWT_SECRET
+        value: your-secure-jwt-secret-here
+      - key: GOOGLE_AI_API_KEY
+        sync: false
+      - key: ENCRYPTION_KEY
+        sync: false 

@@ -13,10 +13,11 @@ services:
       - FLASK_APP=backend/app.py
       - FLASK_ENV=production
       - PYTHONUNBUFFERED=1
-      - NEXT_PUBLIC_API_URL=http://localhost:5001
-      - ADMIN_USERNAME=admin
-      - ADMIN_PASSWORD=tenexai
-      - JWT_SECRET=supersecretkey
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:5001}
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-tenexai}
+      - JWT_SECRET=${JWT_SECRET:-supersecretkey}
       - GOOGLE_AI_API_KEY=${GOOGLE_AI_API_KEY}
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
     restart: unless-stopped
