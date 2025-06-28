@@ -14,20 +14,15 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /app
 
-# Copy backend requirements and install Python dependencies
-COPY backend/requirements.txt ./backend/requirements.txt
+# Copy entire project context first
+COPY . .
+
+# Install Python dependencies
 RUN pip install --no-cache-dir -r backend/requirements.txt watchdog
 
-# Copy backend source code
-COPY backend/ ./backend/
-
-# Copy frontend package files and install dependencies
-COPY frontend/package*.json ./frontend/
+# Install frontend dependencies and build
 WORKDIR /app/frontend
 RUN npm ci
-
-# Copy frontend source code and build
-COPY frontend/ ./
 RUN npm run build
 
 # Return to app directory
@@ -42,12 +37,11 @@ ENV FLASK_ENV=production
 ENV PYTHONUNBUFFERED=1
 ENV NODE_ENV=production
 
-# Copy startup script
-COPY start.sh /app/start.sh
-RUN chmod +x /app/start.sh
+# Copy startup script and make it executable
+RUN chmod +x start.sh
 
 # Expose ports
 EXPOSE 5001 3000
 
 # Start both services
-CMD ["/app/start.sh"] 
+CMD ["./start.sh"] 

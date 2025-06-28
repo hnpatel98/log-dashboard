@@ -3,8 +3,6 @@ services:
     name: log-dashboard
     env: docker
     plan: free
-    buildCommand: docker build -t log-dashboard .
-    startCommand: docker run -p $PORT:3000 log-dashboard
     envVars:
       - key: FLASK_APP
         value: backend/app.py
