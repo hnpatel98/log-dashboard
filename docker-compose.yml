@@ -1,34 +1,24 @@
 services:
-  backend:
+  log-dashboard:
     build:
-      context: ./backend
+      context: .
       dockerfile: Dockerfile
     ports:
-      - "5001:5001"
+      - "3000:3000"  # Frontend
+      - "5001:5001"  # Backend API
     volumes:
-      - backend_uploads:/app/uploads
-      - backend_data:/app/data
+      - backend_uploads:/app/backend/uploads
+      - backend_data:/app/backend/data
     environment:
-      - FLASK_APP=app.py
-      - FLASK_ENV=development
+      - FLASK_APP=backend/app.py
+      - FLASK_ENV=production
       - PYTHONUNBUFFERED=1
-    restart: unless-stopped
-    networks:
-      - log-dashboard-network
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
-    environment:
       - NEXT_PUBLIC_API_URL=http://localhost:5001
       - ADMIN_USERNAME=admin
       - ADMIN_PASSWORD=tenexai
       - JWT_SECRET=supersecretkey
+      - GOOGLE_AI_API_KEY=${GOOGLE_AI_API_KEY}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
     restart: unless-stopped
     networks:
       - log-dashboard-network

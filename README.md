@@ -16,7 +16,7 @@ A modern web application for analyzing log files with AI-powered threat detectio
    cd log-dashboard
    ```
 
-2. **Configure Google AI Integration**
+2. **Configure Google AI Integration (Optional)** 
    - Follow the [Google AI Integration Setup](#google-ai-integration-setup) section below
    - Create `.env` file with your API key
    - Optionally encrypt your API key for security
@@ -28,13 +28,35 @@ A modern web application for analyzing log files with AI-powered threat detectio
 
 4. **Access the dashboard**
    - Frontend: http://localhost:3000
-   - Backend API: http://localhost:5000
-   - Login credentials: `admin` / `admin`
+   - Backend API: http://localhost:5001
+   - Login credentials: `admin` / `tenexai`
 
 5. **Verify installation**
    - Upload a log file through the web interface
    - Check that AI summaries are generated (requires valid API key)
    - Review threat detection and anomaly analysis results
+
+### Development Mode
+
+For development with live reloading:
+
+```bash
+# Build and start in development mode
+docker-compose up --build
+
+# View logs
+docker-compose logs -f
+
+# Stop the application
+docker-compose down
+```
+
+### Session Cleanup
+
+The application automatically cleans up uploaded files and analysis data at the start of each session:
+- **Uploads folder**: Cleared on container startup
+- **Data folder**: Cleared on container startup
+- **Fresh session**: Each restart provides a clean slate
 
 ### Sample Data
 The repository includes sample log files for testing:
@@ -112,7 +134,7 @@ Open the `.env` file and add your Google AI API key:
 GOOGLE_AI_API_KEY=AIzaSyYourActualAPIKeyHere
 
 # Encryption key for securing API keys (32 characters)
-ENCRYPTION_KEY=your_32_character_encryption_key_here
+ENCRYPTION_KEY=your_32_character_encryption_key
 
 # Optional: Customize settings
 FLASK_DEBUG=True
@@ -248,30 +270,59 @@ Explanation: "Unusually long message (150 chars vs avg 45.2)"
 
 ## 🛠️ Development
 
-### Project Structure
+### **Local Development Setup**
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd log-dashboard
+   ```
+
+2. **Set up environment variables**
+   ```bash
+   # Copy example environment file
+   cp backend/env.example .env
+   
+   # Edit .env with your API keys
+   nano .env
+   ```
+
+3. **Start development environment**
+   ```bash
+   # Build and start with live reloading
+   docker-compose up --build
+   
+   # View logs in real-time
+   docker-compose logs -f
+   ```
+
+### **Project Structure**
+
 ```
 log-dashboard/
-├── backend/                 # Flask API server
-│   ├── app.py              # Main application
-│   ├── threat_detector.py  # Threat detection logic
-│   ├── models/             # Data models
-│   └── config.py           # Configuration
-├── frontend/               # Next.js web application
-│   ├── src/
-│   │   ├── app/           # Pages and routing
-│   │   └── components/    # React components
-│   └── package.json
-└── docker-compose.yml      # Container orchestration
+├── Dockerfile              # Single multi-stage container
+├── docker-compose.yml      # Container orchestration
+├── start.sh               # Startup script for both services
+├── .env                   # Environment variables
+├── backend/               # Flask backend application
+│   ├── app.py            # Main Flask application
+│   ├── models/           # Data models
+│   ├── uploads/          # File uploads (cleared on startup)
+│   └── data/             # Analysis results (cleared on startup)
+└── frontend/             # Next.js frontend application
+    ├── src/              # Source code
+    ├── public/           # Static assets
+    └── package.json      # Dependencies
 ```
 
-### Running in Development Mode
-```bash
-# Backend with live reload
-docker-compose up backend
+### **Key Features**
 
-# Frontend with live reload
-docker-compose up frontend
-```
+- **Single Container**: Both backend and frontend run in one container
+- **Multi-stage Build**: Optimized Docker build process
+- **Session Cleanup**: Automatic cleanup of uploads and data on startup
+- **AI Integration**: Google AI Studio for intelligent log analysis
+- **Real-time Processing**: Live log analysis and threat detection
+- **Modern UI**: Responsive Next.js dashboard
 
 ## 📈 Performance
 
@@ -305,3 +356,99 @@ For issues and questions:
 - Create an issue in the repository
 - Check the documentation in `/docs`
 - Review the troubleshooting guide
+
+## 🏗️ Architecture
+
+### **Single Container Design**
+This application uses a **unified container architecture** that combines both backend and frontend services:
+
+- **Backend**: Flask API with AI-powered log analysis
+- **Frontend**: Next.js React dashboard with modern UI
+- **Container**: Single multi-stage Docker build for both services
+
+### **Key Components**
+
+| Component | Technology | Purpose |
+|-----------|------------|---------|
+| **Backend API** | Flask (Python) | Log processing, AI analysis, threat detection |
+| **Frontend UI** | Next.js (React) | User interface, file upload, data visualization |
+| **AI Integration** | Google AI Studio | Intelligent log analysis and summaries |
+| **Database** | In-memory (Pandas) | Temporary data storage during analysis |
+| **Authentication** | JWT | Secure user authentication |
+| **Containerization** | Docker | Consistent deployment environment |
+
+### **Data Flow**
+1. **Upload** → User uploads log file via web interface
+2. **Processing** → Backend parses and analyzes logs
+3. **AI Analysis** → Google AI generates intelligent summaries
+4. **Threat Detection** → Automated security analysis
+5. **Visualization** → Frontend displays results and charts
+
+### **Container Structure**
+- **Single Dockerfile**: Multi-stage build process
+- **Backend Stage**: Python dependencies and Flask application
+- **Frontend Stage**: Node.js dependencies and Next.js build
+- **Production Stage**: Combined runtime with both services
+- **Startup Script**: Orchestrates both backend and frontend services
+
+## 🚀 Deployment
+
+### **Docker Deployment (Recommended)**
+
+The application is containerized using a single multi-stage Docker build:
+
+```bash
+# Build and start the application
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop the application
+docker-compose down
+```
+
+### **Environment Variables**
+
+Create a `.env` file in the root directory:
+
+```env
+# Google AI Studio API Key (required for AI summaries)
+GOOGLE_AI_API_KEY=your_google_ai_key_here
+
+# Encryption key for API keys (32 characters)
+ENCRYPTION_KEY=your_32_character_encryption_key
+
+# Optional: Customize settings
+FLASK_DEBUG=True
+THREAT_DETECTION_ENABLED=True
+ANOMALY_DETECTION_ENABLED=True
+```
+
+### **Port Configuration**
+
+The application exposes two ports:
+- **3000**: Frontend (Next.js)
+- **5001**: Backend API (Flask)
+
+### **Volume Management**
+
+The application uses Docker volumes for persistent storage:
+- `backend_uploads`: Temporary file uploads (cleared on startup)
+- `backend_data`: Analysis results (cleared on startup)
+
+### **Production Deployment**
+
+For production deployment on platforms like Render, Heroku, or AWS:
+
+1. **Set environment variables** in your deployment platform
+2. **Configure the single container** with both services
+3. **Set up health checks** for the backend API endpoint
+4. **Configure SSL/TLS** for secure connections
+
+### **Health Check**
+
+The backend provides a health check endpoint:
+```
+GET http://localhost:5001/api/health
+```

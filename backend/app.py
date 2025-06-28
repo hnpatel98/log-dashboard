@@ -20,6 +20,9 @@ import traceback
 from config import secure_config
 import sys
 import logging
+import shutil
+import atexit
+import signal
 
 # Load environment variables
 load_dotenv()
@@ -1056,6 +1059,57 @@ def generate_ai_summary(logs_df, threats):
             "key_findings": ["Error occurred during AI analysis"],
             "recommendations": ["Check OpenAI API configuration and try again"]
         }
+
+def cleanup_uploads_folder():
+    """Clean up uploads folder when application shuts down"""
+    try:
+        upload_folder = app.config['UPLOAD_FOLDER']
+        if os.path.exists(upload_folder):
+            for filename in os.listdir(upload_folder):
+                file_path = os.path.join(upload_folder, filename)
+                try:
+                    if os.path.isfile(file_path):
+                        os.unlink(file_path)
+                        print(f"Cleaned up uploaded file: {filename}")
+                except Exception as e:
+                    print(f"Error deleting file {filename}: {e}")
+        print("Uploads folder cleanup completed")
+    except Exception as e:
+        print(f"Error during uploads cleanup: {e}")
+
+def cleanup_specific_file(file_id, file_extension):
+    """Clean up a specific uploaded file after processing"""
+    try:
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], f"{file_id}.{file_extension}")
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print(f"Cleaned up uploaded file: {file_id}.{file_extension}")
+            return True
+        return False
+    except Exception as e:
+        print(f"Error cleaning up file {file_id}: {e}")
+        return False
+
+def signal_handler(signum, frame):
+    """Handle shutdown signals gracefully"""
+    print(f"Received signal {signum}, cleaning up...")
+    cleanup_uploads_folder()
+    sys.exit(0)
+
+# Register signal handlers for graceful shutdown
+signal.signal(signal.SIGTERM, signal_handler)
+signal.signal(signal.SIGINT, signal_handler)
+
+# Register cleanup function to run on application shutdown
+atexit.register(cleanup_uploads_folder)
+
+# Also register with Flask's teardown context
+@app.teardown_appcontext
+def cleanup_on_app_context_end(error):
+    """Clean up when Flask app context ends"""
+    if error:
+        print(f"App context ended with error: {error}")
+    # Note: This runs on each request end, so we'll use atexit for session cleanup
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001) 
