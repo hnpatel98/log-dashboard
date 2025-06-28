@@ -5,15 +5,18 @@ export async function POST(request: NextRequest) {
   try {
     const { username, password } = await request.json();
 
-    // Validate credentials against environment variables
-    const validUsername = process.env.ADMIN_USERNAME;
-    const validPassword = process.env.ADMIN_PASSWORD;
+    // Validate credentials against environment variables with fallbacks
+    const validUsername = process.env.ADMIN_USERNAME || 'admin';
+    const validPassword = process.env.ADMIN_PASSWORD || 'tenexai';
+    const jwtSecret = process.env.JWT_SECRET || 'supersecretkey';
+
+    console.log('Login attempt:', { username, validUsername, passwordMatch: password === validPassword });
 
     if (username === validUsername && password === validPassword) {
       // Create JWT token
       const token = sign(
         { username, role: 'admin' },
-        process.env.JWT_SECRET || 'fallback-secret',
+        jwtSecret,
         { expiresIn: '1h' }
       );
 
@@ -30,6 +33,7 @@ export async function POST(request: NextRequest) {
 
       return response;
     } else {
+      console.log('Login failed: Invalid credentials');
       return NextResponse.json(
         { success: false, message: 'Invalid credentials' },
         { status: 401 }

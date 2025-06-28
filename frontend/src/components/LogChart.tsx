@@ -29,8 +29,8 @@ export default function LogChart({ currentFileId }: LogChartProps) {
 
     setIsLoading(true);
     try {
-      // Fetch stats for specific file
-      const response = await fetch(`http://localhost:5001/api/stats/${currentFileId}`);
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+      const response = await fetch(`${apiUrl}/api/stats/${currentFileId}`);
       
       if (response.ok) {
         const statsData = await response.json();

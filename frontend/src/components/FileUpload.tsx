@@ -26,12 +26,14 @@ export default function FileUpload({ onFileAnalyzed }: FileUploadProps) {
     setMessage("");
 
     try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+      
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const formData = new FormData();
         formData.append('file', file);
 
-        const response = await fetch('http://localhost:5001/api/upload', {
+        const response = await fetch(`${apiUrl}/api/upload`, {
           method: 'POST',
           body: formData,
         });
@@ -57,7 +59,8 @@ export default function FileUpload({ onFileAnalyzed }: FileUploadProps) {
 
   const handleAnalyzeFile = async (file: UploadedFile) => {
     try {
-      const response = await fetch(`http://localhost:5001/api/analyze/${file.file_id}`, {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+      const response = await fetch(`${apiUrl}/api/analyze/${file.file_id}`, {
         method: 'POST',
       });
 

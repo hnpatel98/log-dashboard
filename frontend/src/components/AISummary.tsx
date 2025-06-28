@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 interface AISummaryData {
   summary: string;
@@ -13,21 +13,15 @@ interface AISummaryProps {
 }
 
 function parseSummaryField(summary: string): Partial<AISummaryData> | null {
-  // Remove markdown code block if present
-  let cleaned = summary.trim();
-  if (cleaned.startsWith('```json')) cleaned = cleaned.slice(7);
-  if (cleaned.startsWith('```')) cleaned = cleaned.slice(3);
-  if (cleaned.endsWith('```')) cleaned = cleaned.slice(0, -3);
-  cleaned = cleaned.trim();
   try {
+    // Remove markdown code blocks if present
+    const cleaned = summary.replace(/```json\n?|\n?```/g, '');
     const parsed = JSON.parse(cleaned);
-    if (typeof parsed === 'object' && parsed !== null) {
-      return parsed;
-    }
-  } catch {
-    // Not JSON
+    return parsed;
+  } catch (error) {
+    console.log('Failed to parse summary as JSON, using as-is:', error);
+    return null;
   }
-  return null;
 }
 
 const AISummary: React.FC<AISummaryProps> = ({ fileId }) => {
@@ -35,28 +29,30 @@ const AISummary: React.FC<AISummaryProps> = ({ fileId }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchSummary = useCallback(async () => {
+  const generateSummary = useCallback(async () => {
     if (!fileId) return;
 
     setLoading(true);
     setError(null);
 
     try {
-      // First, get threats and stats for this file
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+      
+      // Fetch threats and stats data
       const [threatsResponse, statsResponse] = await Promise.all([
-        fetch(`http://localhost:5001/api/threats/${fileId}`),
-        fetch(`http://localhost:5001/api/stats/${fileId}`)
+        fetch(`${apiUrl}/api/threats/${fileId}`),
+        fetch(`${apiUrl}/api/stats/${fileId}`)
       ]);
 
       if (!threatsResponse.ok || !statsResponse.ok) {
-        throw new Error(`Failed to fetch data: ${threatsResponse.status} ${statsResponse.status}`);
+        throw new Error('Failed to fetch data');
       }
 
       const threatsData = await threatsResponse.json();
       const statsData = await statsResponse.json();
 
-      // Now get AI summary with the actual data
-      const summaryResponse = await fetch(`http://localhost:5001/api/ai-summary/${fileId}`, {
+      // Generate AI summary
+      const summaryResponse = await fetch(`${apiUrl}/api/ai-summary/${fileId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -83,12 +79,12 @@ const AISummary: React.FC<AISummaryProps> = ({ fileId }) => {
 
   useEffect(() => {
     if (fileId) {
-      fetchSummary();
+      generateSummary();
     } else {
       setSummary(null);
       setError(null);
     }
-  }, [fileId, fetchSummary]);
+  }, [fileId, generateSummary]);
 
   if (!fileId) {
     return (

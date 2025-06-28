@@ -57,15 +57,17 @@ export default function DashboardPage() {
     
     // Immediately fetch data for this specific file
     try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+      
       // Fetch stats for this specific file
-      const statsResponse = await fetch(`http://localhost:5001/api/stats/${fileData.file_id}`);
+      const statsResponse = await fetch(`${apiUrl}/api/stats/${fileData.file_id}`);
       if (statsResponse.ok) {
         const statsData = await statsResponse.json();
         setStats(statsData);
       }
 
       // Fetch threats for this specific file
-      const threatsResponse = await fetch(`http://localhost:5001/api/threats/${fileData.file_id}`);
+      const threatsResponse = await fetch(`${apiUrl}/api/threats/${fileData.file_id}`);
       if (threatsResponse.ok) {
         const threatsData = await threatsResponse.json();
         setThreats(threatsData.threats || []);
